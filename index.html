@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NEKOWEAR — Anime Clothing</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --muted:#98a0b3;
+    --accent:#ff6bcb;
+    --accent-2:#7be3ff;
+    --glass: rgba(255,255,255,0.04);
+    --glass-2: rgba(255,255,255,0.02);
+    --radius:16px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background: linear-gradient(180deg,#071326 0%, #071028 40%, #071428 100%);
+    color:#e6eef8;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+  }
+
+  /* header / nav */
+  .nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 28px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .brand{
+    display:flex;
+    gap:14px;
+    align-items:center;
+  }
+  .logo{
+    width:48px;height:48px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#06101a;
+    box-shadow:0 6px 20px rgba(123,227,255,0.07), inset 0 -6px 16px rgba(0,0,0,0.15);
+  }
+  .brand h1{font-size:18px;margin:0}
+  .brand p{margin:0;font-size:12px;color:var(--muted);}
+
+  .nav-actions{display:flex;gap:12px;align-items:center;}
+  .btn{
+    background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;color:var(--muted);
+    font-weight:600;font-size:14px;cursor:pointer;backdrop-filter: blur(6px);
+  }
+  .btn.primary{
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#06101a;border:0;box-shadow:0 8px 24px rgba(123,227,255,0.08);
+  }
+
+  /* hero */
+  .hero{
+    max-width:1200px;margin:20px auto 30px;padding:28px;border-radius:18px;background:linear-gradient(180deg, rgba(123,227,255,0.03), rgba(255,107,203,0.02));
+    display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;
+  }
+  .hero-left h2{font-size:34px;margin:0 0 12px;line-height:1.02}
+  .tag{color:var(--accent-2);font-weight:700}
+  .hero-left p{color:var(--muted);margin:0 0 18px}
+  .search{
+    display:flex;gap:8px;align-items:center;background:var(--glass);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
+  }
+  .search input{flex:1;background:transparent;border:0;outline:none;color:inherit;padding:8px;font-size:14px}
+  .hero-right{
+    border-radius:12px;background:linear-gradient(135deg, rgba(255,107,203,0.09), rgba(123,227,255,0.03));padding:16px;
+  }
+  .banner{
+    height:220px;border-radius:10px;background-image: url('https://via.placeholder.com/800x400?text=Anime+Collection'); background-size:cover;background-position:center;
+    position:relative; overflow:hidden;
+  }
+  .badge{
+    position:absolute;left:14px;top:14px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,0.35);backdrop-filter: blur(6px);
+    font-size:12px;color:#fff;
+  }
+
+  /* products grid */
+  .products-wrap{max-width:1200px;margin:18px auto;padding:0 20px 80px}
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .card{
+    background:linear-gradient(180deg,var(--card), #071226);
+    border-radius:14px;padding:14px;border:1px solid var(--glass-2);transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .card:hover{transform:translateY(-8px);box-shadow: 0 20px 40px rgba(2,6,23,0.6)}
+  .card .img{
+    border-radius:10px;height:200px;background-size:cover;background-position:center;margin-bottom:12px;
+  }
+  .card h3{margin:0 0 6px;font-size:16px}
+  .card p{margin:0 0 10px;color:var(--muted);font-size:13px}
+  .price-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .price{font-weight:800}
+  .small{font-size:12px;color:var(--muted)}
+  .buy{
+    padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#06101a;
+  }
+
+  /* responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .hero-right{order:-1}
+  }
+  @media (max-width:560px){
+    .grid{grid-template-columns:1fr}
+    .nav{padding:14px}
+    .hero{padding:18px}
+    .banner{height:160px}
+  }
+
+  /* little micro animations */
+  .sparkle{
+    position:absolute;right:14px;bottom:14px;font-size:12px;background:rgba(0,0,0,0.25);padding:6px 8px;border-radius:10px;
+  }
+</style>
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <div class="logo">N</div>
+      <div>
+        <h1>NEKOWEAR</h1>
+        <p>Modern anime streetwear</p>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn" onclick="goCart()">Cart</button>
+      <button class="btn primary" onclick="scrollToProducts()">Shop Now</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Wear the vibe. <span class="tag">Live anime — live bold.</span></h2>
+        <p>Limited drops, comfy fits, and art-inspired designs for every otaku’s wardrobe. Free shipping on orders over ₹1,999.</p>
+
+        <div style="display:flex;gap:12px;align-items:center;margin-top:14px;">
+          <div class="search" style="flex:1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.85;margin-right:8px">
+              <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6"/>
+            </svg>
+            <input id="search" placeholder="Search tees, jackets, anime..." oninput="filterProducts(this.value)"/>
+            <button class="btn" onclick="document.getElementById('search').value=''; filterProducts('')">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="banner" aria-hidden="true">
+          <div class="badge">New drop • Autumn 2025</div>
+          <div class="sparkle">Limited stock</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-wrap" id="productsWrap">
+      <h3 style="max-width:1200px;margin:0 auto 14px;padding:0 20px;color:var(--muted)">Featured products</h3>
+
+      <div class="grid" id="productsGrid">
+        <!-- JS will render product cards here -->
+      </div>
+    </section>
+  </main>
+
+<script>
+  // product data
+  const products = [
+    { id:'p1', name:'Sakura Breeze Tee', desc:'Soft cotton tee with sakura art print', price:899, img:'https://via.placeholder.com/600x400?text=Sakura+Tee' },
+    { id:'p2', name:'Neo-Arc Jacket', desc:'Lightweight windbreaker with neon trim', price:2399, img:'https://via.placeholder.com/600x400?text=Neo+Arc+Jacket' },
+    { id:'p3', name:'Chibi Denim', desc:'Comfort-fit denim inspired by chibi art', price:1799, img:'https://via.placeholder.com/600x400?text=Chibi+Denim' },
+    { id:'p4', name:'Moonlight Dress', desc:'Flowy dress with moon motif', price:2499, img:'https://via.placeholder.com/600x400?text=Moonlight+Dress' },
+    { id:'p5', name:'Rogue Hoodie', desc:'Oversized hoodie with embroidered patch', price:1499, img:'https://via.placeholder.com/600x400?text=Rogue+Hoodie' },
+    { id:'p6', name:'Otaku Cap', desc:'Adjustable cap — subtle anime emblem', price:499, img:'https://via.placeholder.com/600x400?text=Otaku+Cap' }
+  ];
+
+  // render
+  const grid = document.getElementById('productsGrid');
+  function render(list){
+    grid.innerHTML = '';
+    list.forEach(p=>{
+      const div = document.createElement('div');
+      div.className='card';
+      div.innerHTML = `
+        <div class="img" style="background-image:url('${p.img}')"></div>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="price-row">
+          <div>
+            <div class="price">₹${p.price.toLocaleString('en-IN')}</div>
+            <div class="small">Free returns • Fast shipping</div>
+          </div>
+          <div>
+            <button class="buy" onclick='buyNow("${p.id}")'>Buy Now</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(div);
+    });
+  }
+  render(products);
+
+  // filtering
+  function filterProducts(q){
+    q = q.trim().toLowerCase();
+    if(!q){ render(products); return; }
+    render(products.filter(p => (p.name + ' ' + p.desc).toLowerCase().includes(q)));
+  }
+
+  // store selected product and go to form.html
+  function buyNow(id){
+    const p = products.find(x=>x.id===id);
+    if(!p) return alert('Product not found');
+    localStorage.setItem('selectedProduct', JSON.stringify(p));
+    // open form page
+    window.location.href = 'form.html';
+  }
+
+  function scrollToProducts(){ document.getElementById('productsWrap').scrollIntoView({behavior:'smooth'}); }
+  function goCart(){ window.location.href='form.html'; }
+
+  // friendly keyboard shortcut: press "c" to go to cart
+  window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='c'){ goCart(); }});
+</script>
+</body>
+</html>

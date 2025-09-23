@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Payment — NEKOWEAR</title>
+<style>
+  :root{
+    --bg:#061225; --card:#071730; --muted:#9fb1c8; --accent:#ff6bcb; --accent-2:#7be3ff;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#04101a,#061225);color:#eaf2ff;padding:28px}
+  .wrap{max-width:720px;margin:28px auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.03)}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  header h3{margin:0}
+  .card{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+  label{display:block;margin-top:12px;color:var(--muted);font-size:13px}
+  input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;outline:none}
+  .row{display:flex;gap:12px}
+  .col{flex:1}
+  .btn{padding:12px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
+  .primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#06101a}
+  .muted{color:var(--muted);font-size:13px}
+  .product-snip{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+  .thumb{width:84px;height:56px;border-radius:8px;background-size:cover;background-position:center}
+
+  @media (max-width:520px){
+    .row{flex-direction:column}
+    .thumb{width:64px;height:44px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h3>Secure payment</h3>
+        <div class="muted">You're paying at NEKOWEAR</div>
+      </div>
+      <div>
+        <button style="background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--muted);cursor:pointer" onclick="goBack()">← Back</button>
+      </div>
+    </header>
+
+    <div id="orderSummary" class="card" style="margin-bottom:14px">
+      <!-- summary -->
+    </div>
+
+    <form class="card" id="paymentForm" onsubmit="payNow(event)">
+      <label>Card number</label>
+      <input id="cardNumber" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" required oninput="formatCard(this)" />
+
+      <div class="row">
+        <div class="col">
+          <label>Expiry</label>
+          <input id="expiry" placeholder="MM/YY" maxlength="5" required oninput="formatExpiry(this)" />
+        </div>
+        <div style="width:120px">
+          <label>CVV</label>
+          <input id="cvv" type="password" maxlength="4" placeholder="123" required />
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+        <button class="btn primary" type="submit">Proceed to Pay</button>
+        <button type="button" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)" onclick="saveDraft()">Save & Exit</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  // load draft order and show
+  function renderSummary(){
+    const node = document.getElementById('orderSummary');
+    const raw = localStorage.getItem('orderDraft') || localStorage.getItem('order') || null;
+    if(!raw){
+      node.innerHTML = `<div class="muted">No order found. <button style="margin-left:8px" onclick="goHome()">Start shopping</button></div>`;
+      return;
+    }
+    try{
+      const order = JSON.parse(raw);
+      const p = order.product;
+      node.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="thumb" style="background-image:url('${p.img}')"></div>
+          <div>
+            <div style="font-weight:800">${p.name}</div>
+            <div class="muted">${p.desc}</div>
+            <div style="margin-top:6px;font-weight:800">₹${p.price.toLocaleString('en-IN')}</div>
+            <div class="muted" style="margin-top:6px;font-size:13px">Paying for: ${order.fullName || '—'}</div>
+          </div>
+        </div>
+      `;
+    }catch(e){ node.innerHTML = `<div class="muted">Error reading order.</div>`; }
+  }
+  renderSummary();
+
+  function goHome(){ window.location.href='index.html'; }
+  function goBack(){ window.location.href='form.html'; }
+
+  // small input formatters
+  function formatCard(el){
+    let v = el.value.replace(/\D/g,'').slice(0,16);
+    const parts = [];
+    for(let i=0;i<v.length;i+=4) parts.push(v.slice(i,i+4));
+    el.value = parts.join(' ');
+  }
+  function formatExpiry(el){
+    let v = el.value.replace(/\D/g,'').slice(0,4);
+    if(v.length>2) v = v.slice(0,2) + '/' + v.slice(2);
+    el.value = v;
+  }
+
+  function saveDraft(){
+    alert('Saved for later. You can return to payment any time.');
+    // draft already exists in localStorage.orderDraft
+    // just keep it
+  }
+
+  function payNow(e){
+    e.preventDefault();
+    // dummy validation
+    const card = document.getElementById('cardNumber').value.replace(/\s/g,'');
+    const expiry = document.getElementById('expiry').value;
+    const cvv = document.getElementById('cvv').value;
+    if(card.length<12 || cvv.length<3){ alert('Please enter valid card details.'); return; }
+
+    // finalize order: combine orderDraft + payment masked info
+    const draft = JSON.parse(localStorage.getItem('orderDraft') || '{}');
+    if(!draft.product){ alert('Order missing.'); return window.location.href='index.html'; }
+
+    const order = {
+      ...draft,
+      payment: { cardMasked: '**** **** **** ' + card.slice(-4), paidAt: new Date().toISOString() },
+      id: 'ORD' + Math.floor(Math.random()*900000 + 100000)
+    };
+    // store finalized order
+    localStorage.setItem('order', JSON.stringify(order));
+    // optionally remove orderDraft but keep for reference
+    localStorage.removeItem('orderDraft');
+
+    // redirect to thank you
+    window.location.href = 'thankyou.html';
+  }
+</script>
+</body>
+</html>

@@ -1,88 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Thank you — NEKOWEAR</title>
-<style>
-  :root{
-    --bg:#071428; --muted:#a9bfd2; --accent:#ff6bcb; --accent-2:#7be3ff;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#041022,#071428);color:#eaf2ff;display:flex;align-items:center;justify-content:center;padding:28px}
-  .card{max-width:720px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:32px;border-radius:18px;border:1px solid rgba(255,255,255,0.03);text-align:center}
-  h1{font-size:28px;margin:0 0 8px}
-  p{color:var(--muted);margin:8px 0 18px}
-  .details{background:rgba(255,255,255,0.02);padding:12px;border-radius:12px;margin:14px 0}
-  .btn{padding:12px 16px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
-  .primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#06101a}
-  .muted{color:var(--muted);font-size:13px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You</title>
+  <style>
+    body {font-family:'Poppins',sans-serif;background:#fdfdfd;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;text-align:center;}
+    h1 {color:#ff4b5c;font-size:2rem;}
+    p {margin:10px 0;font-size:1.2rem;}
+    button {margin-top:20px;background:#ff4b5c;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;}
+    button:hover {background:#e13c4d;}
+  </style>
 </head>
 <body>
-  <div class="card" id="mainCard">
-    <div style="font-size:42px">🎉</div>
-    <h1>Thank you for your purchase!</h1>
-    <p>Your order has been placed successfully.</p>
-
-    <div id="info" class="details muted">
-      <!-- order details inserted here -->
-      <div>Order ID: <strong id="orderId">—</strong></div>
-      <div style="margin-top:6px">Item: <strong id="orderItem">—</strong></div>
-      <div style="margin-top:6px">Amount: <strong id="orderAmt">—</strong></div>
-    </div>
-
-    <div style="display:flex;gap:12px;justify-content:center">
-      <button class="btn primary" onclick="backHome()">Back to Home</button>
-      <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)" onclick="downloadReceipt()">Download receipt</button>
-    </div>
-    <div style="margin-top:12px" class="muted">You will also receive an email confirmation (demo).</div>
-  </div>
-
-<script>
-  function loadOrder(){
-    const raw = localStorage.getItem('order') || localStorage.getItem('orderDraft');
-    if(!raw) return;
-    try{
-      const order = JSON.parse(raw);
-      document.getElementById('orderId').innerText = order.id || 'TBD';
-      document.getElementById('orderItem').innerText = (order.product && order.product.name) ? order.product.name : '—';
-      document.getElementById('orderAmt').innerText = (order.product && order.product.price) ? '₹' + order.product.price.toLocaleString('en-IN') : '—';
-    }catch(e){}
-  }
-
-  loadOrder();
-
-  function backHome(){
-    // clear cart and drafts (for demo)
-    localStorage.removeItem('selectedProduct');
-    localStorage.removeItem('orderDraft');
-    // keep 'order' as receipt
-    window.location.href = 'index.html';
-  }
-
-  function downloadReceipt(){
-    const raw = localStorage.getItem('order') || localStorage.getItem('orderDraft') || '{}';
-    const order = JSON.parse(raw);
-    const content = [
-      'NEKOWEAR — Receipt',
-      'Order ID: ' + (order.id || 'N/A'),
-      'Customer: ' + (order.fullName || 'N/A'),
-      'Email: ' + (order.email || 'N/A'),
-      'Product: ' + ((order.product && order.product.name) || 'N/A'),
-      'Amount: ' + ((order.product && '₹'+order.product.price) || 'N/A'),
-      'Paid at: ' + (order.payment ? order.payment.paidAt : 'N/A'),
-    ].join('\\n');
-
-    const blob = new Blob([content], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (order.id ? order.id + '_receipt.txt' : 'neko_receipt.txt');
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-</script>
+  <h1>🎉 Thank you for your purchase!</h1>
+  <p>Your order has been placed successfully.</p>
+  <button onclick="window.location.href='index.html'">Back to Home</button>
 </body>
 </html>
